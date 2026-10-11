@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BubbleBreak AI - Quebre sua Bolha Digital</title>
+    <style>
+        /* ===== RESET E BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4ff;
+            color: #1a2a4a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(135deg, #0033a0, #0055cc);
+            width: 100%;
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 51, 160, 0.3);
+            text-align: center;
+        }
+
+        header h1 {
+            color: #ffffff;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        header h1 span {
+            color: #80d4ff;
+        }
+
+        header p {
+            color: #cce6ff;
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+
+        /* ===== CONTAINER PRINCIPAL ===== */
+        .container {
+            max-width: 950px;
+            width: 90%;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 40px 35px;
+            margin: 40px auto;
+            box-shadow: 0 10px 40px rgba(0, 51, 160, 0.15);
+            border: 1px solid #e6efff;
+        }
+
+        /* ===== TELAS ===== */
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== TELA INICIAL ===== */
+        #home .logo-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        #home h2 {
+            font-size: 2rem;
+            color: #0033a0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        #home .texto-explicativo {
+            background: #f5f8ff;
+            padding: 25px 30px;
+            border-radius: 16px;
+            border-left: 5px solid #0033a0;
+            margin: 20px 0 25px;
+            line-height: 1.8;
+            font-size: 1rem;
+            color: #1a2a4a;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #home .texto-explicativo h3 {
+            color: #0033a0;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        #home .texto-explicativo p {
+            margin-bottom: 12px;
+        }
+
+        #home .texto-explicativo .destaque {
+            font-weight: 600;
+            color: #0033a0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0033a0, #0055cc);
+            color: #ffffff;
+            border: none;
+            padding: 16px 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 51, 160, 0.35);
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 51, 160, 0.45);
+        }
+
+        .btn-secondary {
+            background: #e6efff;
+            color: #0033a0;
+            border: 2px solid #0033a0;
+            padding: 12px 35px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .btn-secondary:hover {
+            background: #0033a0;
+            color: #ffffff;
+        }
+
+        .btn-center {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        /* ===== BATE-PAPO ===== */
+        #chat {
+            display: none;
+        }
+
+        #chat.active {
+            display: block;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 520px;
+            background: #f8faff;
+            border-radius: 16px;
+            border: 1px solid #dce6f5;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #b0c8e8;
+            border-radius: 10px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 14px 20px;
+            border-radius: 18px;
+            line-height: 1.6;
+            font-size: 1rem;
+            animation: fadeIn 0.3s ease;
+            word-wrap: break-word;
+        }
+
+        .message.bot {
+            background: #e6efff;
+            color: #1a2a4a;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #d0dff5;
+        }
+
+        .message.bot .typing-indicator {
+            display: flex;
+            gap: 6px;
+            padding: 4px 0;
+        }
+
+        .message.bot .typing-indicator span {
+            width: 10px;
+            height: 10px;
+            background: #4a7ab5;
+            border-radius: 50%;
+            animation: typing 1.2s infinite ease-in-out;
+        }
+
+        .message.bot .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .message.bot .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%,
+            80%,
+            100% {
+                transform: scale(0.6);
+                opacity: 0.4;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #0033a0, #0055cc);
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 12px;
+            padding: 15px 20px;
+            background: #ffffff;
+            border-top: 1px solid #dce6f5;
+            align-items: center;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #dce6f5;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+            background: #f8faff;
+        }
+
+        .chat-input-area input:focus {
+            border-color: #0033a0;
+        }
+
+        .chat-input-area input:disabled {
+            background: #eef3fa;
+            cursor: not-allowed;
+        }
+
+        .chat-input-area button {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #0033a0, #0055cc);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .chat-input-area button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 51, 160, 0.3);
+        }
+
+        .chat-input-area button:disabled {
+            background: #a0b8d6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== RESULTADO ===== */
+        #result .result-card {
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        #result .result-card .bubbleband {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #0033a0;
+            margin-bottom: 5px;
+        }
+
+        #result .traffic-light {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        #result .light {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #dce6f5;
+            box-shadow: inset 0 -4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+            border: 3px solid rgba(0, 0, 0, 0.05);
+        }
+
+        #result .light.active-green {
+            background: radial-gradient(circle at 30% 30%, #66ff88, #00b33c);
+            box-shadow: 0 0 40px rgba(0, 200, 50, 0.5);
+        }
+
+        #result .light.active-yellow {
+            background: radial-gradient(circle at 30% 30%, #ffe066, #e6b800);
+            box-shadow: 0 0 40px rgba(230, 184, 0, 0.5);
+        }
+
+        #result .light.active-red {
+            background: radial-gradient(circle at 30% 30%, #ff6666, #cc0000);
+            box-shadow: 0 0 40px rgba(200, 0, 0, 0.5);
+        }
+
+        #result .result-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 15px 0 10px;
+        }
+
+        #result .result-title.green {
+            color: #00b33c;
+        }
+        #result .result-title.yellow {
+            color: #b38f00;
+        }
+        #result .result-title.red {
+            color: #cc0000;
+        }
+
+        #result .result-description {
+            font-size: 1.1rem;
+            color: #2a3f6a;
+            line-height: 1.7;
+            max-width: 650px;
+            margin: 10px auto 20px;
+        }
+
+        .prevention-tips {
+            text-align: left;
+            background: #f5f8ff;
+            padding: 25px 30px;
+            border-radius: 16px;
+            margin: 20px 0;
+            border-left: 5px solid #0033a0;
+        }
+
+        .prevention-tips h3 {
+            color: #0033a0;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .prevention-tips ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .prevention-tips ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e6efff;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .prevention-tips ul li:last-child {
+            border-bottom: none;
+        }
+
+        .prevention-tips ul li::before {
+            content: "💡";
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        /* ===== LOADING ===== */
+        #loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #e6efff;
+            border-top-color: #0033a0;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #loading p {
+            color: #4a6a9a;
+            font-size: 1.2rem;
+            margin-top: 15px;
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .container {
+                padding: 20px 15px;
+            }
+            #home h2 {
+                font-size: 1.5rem;
+            }
+            #home .texto-explicativo {
+                padding: 18px 16px;
+                max-height: 300px;
+                font-size: 0.95rem;
+            }
+            .chat-container {
+                height: 420px;
+            }
+            .message {
+                max-width: 92%;
+                font-size: 0.95rem;
+                padding: 12px 16px;
+            }
+            .chat-input-area {
+                flex-direction: column;
+                gap: 8px;
+                padding: 12px 15px;
+            }
+            .chat-input-area input {
+                width: 100%;
+            }
+            .chat-input-area button {
+                width: 100%;
+            }
+            #result .light {
+                width: 60px;
+                height: 60px;
+            }
+            .prevention-tips {
+                padding: 18px 16px;
+            }
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #4a6a9a;
+            font-size: 0.9rem;
+            border-top: 1px solid #dce6f5;
+            width: 90%;
+            max-width: 950px;
+            margin-top: 10px;
+        }
+
+        footer strong {
+            color: #0033a0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <h1>🛡️ Bubble<span>Break</span> AI</h1>
+        <p>Entenda como os algoritmos influenciam sua vida — e aprenda a sair da bolha</p>
+    </header>
+
+    <!-- ===== CONTAINER ===== -->
+    <div class="container">
+
+        <!-- ===== TELA INICIAL ===== -->
+        <div id="home" class="screen active">
+            <div class="logo-icon">🧠</div>
+            <h2>Bem-vindo ao BubbleBreak AI</h2>
+
+            <div class="texto-explicativo">
+                <h3>📖 Sobre o Projeto — TCEF</h3>
+                <p>
+                    Nosso trabalho procura compreender como os algoritmos do <strong>Instagram</strong> e do
+                    <strong>TikTok</strong> influenciam a vida das pessoas, especialmente dos estudantes. A pesquisa
+                    surgiu a partir da observação de como essas plataformas selecionam, organizam e recomendam
+                    conteúdos com base no comportamento de cada usuário, considerando fatores como curtidas,
+                    comentários, compartilhamentos, pesquisas e tempo de visualização. Esse funcionamento pode
+                    fazer com que o usuário passe a receber cada vez mais conteúdos semelhantes aos que já consome,
+                    contribuindo para a formação das chamadas <span class="destaque">bolhas de informação</span>.
+                </p>
+                <p>
+                    As bolhas de informação podem limitar o contato das pessoas com diferentes opiniões, ideias e
+                    pontos de vista, fazendo com que determinado usuário tenha uma visão mais restrita sobre alguns
+                    assuntos. Ao mesmo tempo, os algoritmos também possuem aspectos positivos, pois facilitam o
+                    acesso a conteúdos de interesse, ajudam na descoberta de informações e permitem uma experiência
+                    mais personalizada nas redes sociais. Por isso, nosso trabalho não busca apresentar os algoritmos
+                    apenas como algo negativo, mas compreender seus efeitos e incentivar uma utilização mais
+                    consciente dessas ferramentas.
+                </p>
+                <p>
+                    Por meio de pesquisas e de um questionário realizado com <strong>104 estudantes</strong>,
+                    procuramos compreender como os alunos utilizam essas redes sociais, quais conteúdos recebem com
+                    maior frequência, se percebem a influência dos algoritmos em seus feeds e se têm contato com
+                    opiniões diferentes das suas. A partir dessas informações, buscamos analisar o nível de
+                    conhecimento dos estudantes sobre o funcionamento dos algoritmos e sua percepção sobre as
+                    possíveis consequências da personalização dos conteúdos.
+                </p>
+                <p>
+                    Além da pesquisa, nosso projeto busca desenvolver uma proposta que ajude o usuário a reconhecer
+                    quando pode estar sendo exposto excessivamente aos mesmos tipos de conteúdos. A ideia é utilizar
+                    a <span class="destaque">BubbleBreak AI</span> como uma ferramenta de orientação e prevenção,
+                    capaz de analisar as respostas do usuário e apresentar um diagnóstico sobre sua exposição às
+                    bolhas de informação, além de oferecer sugestões para ampliar o contato com diferentes
+                    perspectivas.
+                </p>
+                <p>
+                    Também estamos desenvolvendo um protótipo de uma pulseira, a <span class="destaque">BubbleBand</span>,
+                    que representa visualmente o resultado do diagnóstico por meio de um sistema semelhante a um
+                    semáforo: 🟢 para uma baixa exposição, 🟡 para uma situação de atenção e 🔴 para uma maior
+                    exposição à bolha. Dessa forma, buscamos transformar um problema relacionado ao ambiente digital
+                    em uma experiência mais visual, acessível e fácil de compreender.
+                </p>
+                <p>
+                    Nosso principal objetivo é incentivar o <span class="destaque">pensamento crítico</span>, o acesso
+                    a diferentes fontes e perspectivas e um uso mais consciente das redes sociais, mostrando que
+                    compreender o funcionamento dos algoritmos é importante para que o usuário tenha maior autonomia
+                    sobre aquilo que consome na internet. Dessa maneira, o projeto pretende contribuir para que os
+                    estudantes não sejam apenas consumidores passivos de conteúdo, mas desenvolvam maior consciência
+                    sobre suas escolhas e sobre a influência que as redes sociais podem exercer em sua forma de
+                    perceber informações e opiniões.
+                </p>
+            </div>
+
+            <div class="btn-center">
+                <button class="btn-primary" onclick="startChat()">💬 Conversar com a IA</button>
+            </div>
+            <div style="text-align: center; margin-top: 12px; font-size: 0.9rem; color: #6a8aba;">
+                A BubbleBreak AI vai fazer algumas perguntas e analisar seu nível de exposição à bolha
+            </div>
+        </div>
+
+        <!-- ===== BATE-PAPO ===== -->
+        <div id="chat" class="screen">
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Mensagens serão inseridas aqui via JS -->
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chatInput" placeholder="Digite sua resposta..." disabled>
+                    <button id="chatSendBtn" disabled onclick="sendMessage()">Enviar →</button>
+                </div>
+            </div>
+            <div style="margin-top: 15px; text-align: center; font-size: 0.85rem; color: #6a8aba;">
+                A BubbleBreak AI está analisando suas respostas em tempo real
+            </div>
+        </div>
+
+        <!-- ===== LOADING ===== -->
+        <div id="loading" class="screen">
+            <div class="spinner"></div>
+            <p>🧠 A BubbleBreak AI está analisando suas respostas...</p>
+            <p style="font-size: 0.95rem; color: #6a8aba;">Isso pode levar alguns segundos</p>
+        </div>
+
+        <!-- ===== RESULTADO ===== -->
+        <div id="result" class="screen">
+            <div class="result-card">
+                <div class="bubbleband">📿 BubbleBand — Diagnóstico</div>
+                <div class="traffic-light">
+                    <div class="light" id="lightRed"></div>
+                    <div class="light" id="lightYellow"></div>
+                    <div class="light" id="lightGreen"></div>
+                </div>
+                <div class="result-title" id="resultTitle">—</div>
+                <div class="result-description" id="resultDescription">—</div>
+
+                <div class="prevention-tips" id="preventionTips">
+                    <h3>🧩 Como se libertar da bolha</h3>
+                    <ul id="tipsList">
+                        <li>Carregando dicas...</li>
+                    </ul>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-secondary" onclick="restartAll()">🔄 Refazer Diagnóstico</button>
+                    <button class="btn-primary" onclick="shareResult()">📤 Compartilhar</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <strong>BubbleBreak AI</strong> — Projeto TCEF · Tecnologia para uma navegação mais consciente. © 2026
+    </footer>
+
+    <!-- ============================================================ -->
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // =========================================
+        // 1. PERGUNTAS PARA O BATE-PAPO
+        // =========================================
+        const perguntas = [
+            "Olá! Eu sou a BubbleBreak AI. Vamos conversar sobre seus hábitos digitais. Para começar: com que frequência você consome notícias de fontes com visões políticas ou ideológicas diferentes das suas?",
+            "Entendi. Quando você vê uma opinião contrária à sua nas redes sociais, qual é sua reação típica?",
+            "Interessante. Seu feed de notícias e redes sociais é composto majoritariamente por que tipo de conteúdo?",
+            "Com que frequência você pesquisa ativamente por informações que contradizem suas crenças?",
+            "Quantas fontes de notícia diferentes você consome regularmente? (ex: jornais, canais, sites)",
+            "Você já parou de seguir ou bloqueou alguém por ter opiniões diferentes das suas?",
+            "Como você descreveria a diversidade de pessoas que você segue/interage nas redes sociais?",
+            "Você confia que os algoritmos das redes sociais mostram uma visão equilibrada do mundo?"
+        ];
+
+        // =========================================
+        // 2. VARIÁVEIS DE ESTADO
+        // =========================================
+        let perguntaAtual = 0;
+        const respostas = [];
+        let chatAtivo = false;
+        let aguardandoResposta = false;
+        let resultadoExibido = false;
+
+        // =========================================
+        // 3. INICIAR BATE-PAPO
+        // =========================================
+        function startChat() {
+            showScreen('chat');
+            perguntaAtual = 0;
+            respostas.length = 0;
+            resultadoExibido = false;
+            chatAtivo = true;
+            aguardandoResposta = true;
+
+            const messages = document.getElementById('chatMessages');
+            messages.innerHTML = '';
+
+            document.getElementById('chatInput').disabled = false;
+            document.getElementById('chatInput').value = '';
+            document.getElementById('chatInput').focus();
+            document.getElementById('chatSendBtn').disabled = false;
+
+            addMessage('bot', '🧠 Olá! Sou a BubbleBreak AI, uma assistente criada para entender como os algoritmos influenciam sua experiência nas redes sociais. Vamos fazer uma análise rápida dos seus hábitos digitais. Responda com sinceridade para que eu possa te ajudar da melhor forma!');
+
+            setTimeout(() => {
+                fazerPergunta();
+            }, 1200);
+        }
+
+        // =========================================
+        // 4. FAZER PERGUNTA
+        // =========================================
+        function fazerPergunta() {
+            if (perguntaAtual >= perguntas.length) {
+                finalizarDiagnostico();
+                return;
+            }
+
+            aguardandoResposta = true;
+            const pergunta = perguntas[perguntaAtual];
+            addMessage('bot', pergunta);
+            document.getElementById('chatInput').disabled = false;
+            document.getElementById('chatInput').value = '';
+            document.getElementById('chatInput').focus();
+            document.getElementById('chatSendBtn').disabled = false;
+        }
+
+        // =========================================
+        // 5. ENVIAR MENSAGEM DO USUÁRIO
+        // =========================================
+        function sendMessage() {
+            if (!aguardandoResposta || perguntaAtual >= perguntas.length) return;
+
+            const input = document.getElementById('chatInput');
+            const texto = input.value.trim();
+
+            if (texto === '') {
+                input.style.borderColor = '#cc0000';
+                setTimeout(() => { input.style.borderColor = '#dce6f5'; }, 1000);
+                return;
+            }
+
+            addMessage('user', texto);
+            respostas.push(texto);
+
+            input.disabled = true;
+            document.getElementById('chatSendBtn').disabled = true;
+            input.value = '';
+            aguardandoResposta = false;
+            perguntaAtual++;
+
+            setTimeout(() => {
+                addTypingIndicator();
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    fazerPergunta();
+                }, 800 + Math.random() * 600);
+            }, 500);
+        }
+
+        // =========================================
+        // 6. FINALIZAR DIAGNÓSTICO
+        // =========================================
+        function finalizarDiagnostico() {
+            aguardandoResposta = false;
+            document.getElementById('chatInput').disabled = true;
+            document.getElementById('chatSendBtn').disabled = true;
+
+            addMessage('bot', '✅ Obrigado pelas respostas! Agora vou analisar seus hábitos digitais e verificar se você está em uma bolha de informação. Aguarde um momento...');
+
+            setTimeout(() => {
+                showScreen('loading');
+                setTimeout(() => {
+                    const resultado = analisarRespostas();
+                    showResult(resultado);
+                }, 1800);
+            }, 1000);
+        }
+
+        // =========================================
+        // 7. ANÁLISE DAS RESPOSTAS (EQUILIBRADA)
+        // =========================================
+        function analisarRespostas() {
+            let scoreTotal = 0;
+            const total = perguntas.length;
+
+            respostas.forEach(texto => {
+                const lower = texto.toLowerCase().trim();
+
+                // 🔴 RUINS FORTES (peso 3) — bolha profunda
+                const ruinsForte = [
+                    'nunca', 'jamais', 'só', 'so ', 'apenas', 'única', 'unica',
+                    'bloqueei', 'silenciei', 'odeio', 'detesto', 'evito',
+                    'não gosto', 'nao gosto', 'não suporto', 'nao suporto',
+                    'mesma', 'mesmo', 'iguais', 'igual', 'sempre igual',
+                    'não confio', 'nao confio', 'desconfio', 'prefiro não',
+                    'prefiro nao', 'não quero', 'nao quero'
+                ];
+
+                // 🟠 RUINS MÉDIAS (peso 2) — sinais de bolha
+                const ruinsMedio = [
+                    'raramente', 'pouco', 'quase nunca', 'difícil', 'dificil',
+                    'não vejo', 'nao vejo', 'não costumo', 'nao costumo',
+                    'não leio', 'nao leio', 'não pesquiso', 'nao pesquiso',
+                    'não tenho', 'nao tenho', 'não sigo', 'nao sigo',
+                    'às vezes não', 'as vezes nao', 'acho difícil', 'acho dificil'
+                ];
+
+                // 🟢 BOAS FORTES (peso 3) — mente aberta
+                const boasForte = [
+                    'sempre busco', 'sempre procuro', 'sempre leio', 'sempre vejo',
+                    'gosto de ver', 'gosto de ler', 'gosto de entender',
+                    'diversidade', 'diversas', 'diferentes', 'várias', 'varias',
+                    'muitas', 'todos os lados', 'ambos os lados', 'equilibrado',
+                    'aberto', 'plural', 'gosto de debater', 'gosto de conversar',
+                    'gosto de ouvir', 'gosto de aprender', 'com certeza',
+                    'sim sempre', 'com frequência', 'com frequencia'
+                ];
+
+                // 🟡 BOAS MÉDIAS (peso 1) — hábitos saudáveis
+                const boasMedio = [
+                    'às vezes', 'as vezes', 'frequentemente', 'costumo',
+                    'procuro', 'busco', 'leio', 'vejo', 'pesquiso',
+                    'de vez em quando', 'ocasionalmente', 'tenho contato',
+                    'interajo', 'comunico', 'sim', 'às vzs', 'as vzs',
+                    'algumas vezes', 'de vez enquando'
+                ];
+
+                let pontosRuins = 0;
+                let pontosBons = 0;
+
+                ruinsForte.forEach(p => { if (lower.includes(p)) pontosRuins += 3; });
+                ruinsMedio.forEach(p => { if (lower.includes(p)) pontosRuins += 2; });
+                boasForte.forEach(p => { if (lower.includes(p)) pontosBons += 3; });
+                boasMedio.forEach(p => { if (lower.includes(p)) pontosBons += 1; });
+
+                if (lower.length > 80 && pontosRuins === 0) pontosBons += 1;
+
+                let pontuacao = 1.5;
+
+                if (pontosRuins > 0 && pontosBons === 0) {
+                    if (pontosRuins >= 6) pontuacao = 3.0;
+                    else if (pontosRuins >= 3) pontuacao = 2.6;
+                    else pontuacao = 2.2;
+                } else if (pontosBons > 0 && pontosRuins === 0) {
+                    if (pontosBons >= 6) pontuacao = 0.0;
+                    else if (pontosBons >= 3) pontuacao = 0.4;
+                    else pontuacao = 0.9;
+                } else if (pontosRuins > pontosBons) {
+                    pontuacao = 2.3;
+                } else if (pontosBons > pontosRuins) {
+                    pontuacao = 0.7;
+                } else if (pontosRuins > 0 && pontosBons > 0) {
+                    pontuacao = 1.3;
+                }
+
+                if (lower === 'sim' || lower === 's' || lower === 'claro' || lower === 'com certeza') {
+                    pontuacao = 1.0;
+                }
+                if (lower === 'não' || lower === 'nao' || lower === 'n') {
+                    pontuacao = 2.0;
+                }
+
+                scoreTotal += pontuacao;
+            });
+
+            const media = scoreTotal / total;
+
+            let cor, justificativa;
+            if (media < 0.95) {
+                cor = 'verde';
+                justificativa = '🎉 Você tem hábitos digitais muito saudáveis! Busca ativamente por diversidade de opiniões e mantém uma mente aberta. Seu consumo de informação é equilibrado e você parece ter consciência sobre o funcionamento dos algoritmos. Continue assim!';
+            } else if (media < 1.85) {
+                cor = 'amarelo';
+                justificativa = '⚠️ Você apresenta alguns sinais de que pode estar começando a entrar em uma bolha de informação. Ainda dá tempo de se prevenir! Busque diversificar suas fontes, siga pessoas com opiniões diferentes e questione mais o que os algoritmos te mostram.';
+            } else {
+                cor = 'vermelho';
+                justificativa = '🔴 Atenção! Você está em uma bolha digital! Seu consumo de informação é muito homogêneo e você tem pouco contato com opiniões contrárias. É hora de agir para expandir seus horizontes e sair da bolha.';
+            }
+
+            return { cor, justificativa };
+        }
+
+        // =========================================
+        // 8. EXIBIR RESULTADO
+        // =========================================
+        function showResult(data) {
+            const cor = data.cor || 'amarelo';
+            const justificativa = data.justificativa || 'Análise concluída.';
+
+            const colors = {
+                verde: {
+                    title: '🟢 Baixa Exposição à Bolha',
+                    desc: justificativa,
+                    cssClass: 'green',
+                    lightClass: 'active-green',
+                    tips: [
+                        'Continue buscando fontes diversas — você está no caminho certo!',
+                        'Compartilhe suas descobertas com amigos para incentivar outros.',
+                        'Mantenha o hábito de questionar algoritmos e buscar o contraditório.',
+                        'Explore assuntos fora da sua zona de conforto regularmente.',
+                        'Use seu conhecimento para ajudar outras pessoas a saírem da bolha.'
+                    ]
+                },
+                amarelo: {
+                    title: '🟡 Atenção! Início de Bolha Detectado',
+                    desc: justificativa,
+                    cssClass: 'yellow',
+                    lightClass: 'active-yellow',
+                    tips: [
+                        'Siga pelo menos 2 fontes de notícias com visões diferentes das suas.',
+                        'Pesquise ativamente por opiniões contrárias — entenda o "outro lado".',
+                        'Limpe seus cookies e navegue em modo anônimo para ver resultados neutros.',
+                        'Diversifique seu feed: siga pessoas de diferentes áreas e ideologias.',
+                        'Pratique o pensamento crítico: "Por que isso está aparecendo para mim?"'
+                    ]
+                },
+                vermelho: {
+                    title: '🔴 Alerta! Você está em uma Bolha de Informação!',
+                    desc: justificativa,
+                    cssClass: 'red',
+                    lightClass: 'active-red',
+                    tips: [
+                        '🚨 Pare e reflita: você está vendo apenas o que quer ver?',
+                        'Siga fontes de notícias com viés oposto ao seu — mesmo que doa.',
+                        'Use buscadores com neutralidade (ex: DuckDuckGo) para fugir de algoritmos.',
+                        'Participe de grupos e fóruns com diversidade de opinião.',
+                        'Leia livros e artigos de autores com visões diferentes das suas.',
+                        'Desafie-se: encontre 3 argumentos fortes contra sua própria posição.',
+                        'Reduza o tempo em redes sociais que reforçam suas crenças.'
+                    ]
+                }
+            };
+
+            const result = colors[cor] || colors.amarelo;
+
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultTitle').className = 'result-title ' + result.cssClass;
+            document.getElementById('resultDescription').textContent = result.desc;
+
+            document.getElementById('lightRed').className = 'light' + (cor === 'vermelho' ? ' active-red' : '');
+            document.getElementById('lightYellow').className = 'light' + (cor === 'amarelo' ? ' active-yellow' : '');
+            document.getElementById('lightGreen').className = 'light' + (cor === 'verde' ? ' active-green' : '');
+
+            const tipsList = document.getElementById('tipsList');
+            tipsList.innerHTML = '';
+            result.tips.forEach(tip => {
+                const li = document.createElement('li');
+                li.textContent = tip;
+                tipsList.appendChild(li);
+            });
+
+            showScreen('result');
+            resultadoExibido = true;
+        }
+
+        // =========================================
+        // 9. UTILITÁRIOS DO CHAT
+        // =========================================
+        function addMessage(tipo, texto) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'message ' + tipo;
+
+            if (tipo === 'bot') {
+                div.innerHTML = texto.replace(/\n/g, '<br>');
+            } else {
+                div.textContent = texto;
+            }
+
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function addTypingIndicator() {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'message bot';
+            div.id = 'typingIndicator';
+            div.innerHTML = `
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        // =========================================
+        // 10. TELAS
+        // =========================================
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function restartAll() {
+            perguntaAtual = 0;
+            respostas.length = 0;
+            chatAtivo = false;
+            aguardandoResposta = false;
+            resultadoExibido = false;
+            document.getElementById('chatMessages').innerHTML = '';
+            document.getElementById('chatInput').disabled = true;
+            document.getElementById('chatSendBtn').disabled = true;
+            showScreen('home');
+        }
+
+        function shareResult() {
+            const title = document.getElementById('resultTitle').textContent;
+            const desc = document.getElementById('resultDescription').textContent;
+            const text = `🧠 BubbleBreak AI - Diagnóstico\n\n${title}\n${desc}\n\nDescubra se você está em uma bolha digital: https://bubblebreak.ai`;
+            if (navigator.share) {
+                navigator.share({ title: 'BubbleBreak AI', text: text });
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('📋 Resultado copiado para a área de transferência!');
+                }).catch(() => {
+                    prompt('Copie o resultado:', text);
+                });
+            }
+        }
+
+        // =========================================
+        // 11. EVENTOS DE TECLADO
+        // =========================================
+        document.getElementById('chatInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // =========================================
+        // 12. INICIALIZAÇÃO
+        // =========================================
+        console.log('🛡️ BubbleBreak AI - TCEF carregado!');
+        console.log('💬 Modo bate-papo ativado. Clique em "Conversar com a IA" para começar.');
+    </script>
+
+</body>
+</html>
